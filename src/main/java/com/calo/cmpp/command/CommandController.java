@@ -138,7 +138,7 @@ public class CommandController {
         if (templateCode == null) return;
         pressureTestRequest.setTemplateCode(templateCode);
 
-        if (!"2".equals(templateCode)){
+        if (!"2".equals(templateCode)) {
             String templateBody = KeyboardCommandUtil.getKeyboardCommand("自定义内容输入：", scanner, null, "再给你一次机会！");
             if (templateBody == null) return;
             pressureTestRequest.setTemplateBody(templateBody);
@@ -177,111 +177,43 @@ public class CommandController {
     }
 
 
-    private boolean addAccountCmpp(Scanner scanner) {
+    private void addAccountCmpp(Scanner scanner) {
         CmppSendAccountChannel cmpp = new CmppSendAccountChannel();
-        System.out.println("输入CMPP账号对应的参数：(要是输入错了直接出入：reset)");
+        System.out.println("输入CMPP账号对应的参数：");
         System.out.println("\033[1;94m----------------------------------------- 添加账号列表 -----------------------------------------\033[m");
-        do {
-            System.out.print("选择账号协议[1、CMPP20  2、CMPP30]：");
-            String accountNUmber = scanner.nextLine();
-            switch (accountNUmber) {
-                case "1" -> cmpp.setProtocol(CmppType.CMPP20);
-                case "2" -> cmpp.setProtocol(CmppType.CMPP30);
-                case "exit" -> {
-                    return false;
-                }
-                default -> System.out.println("再给你一次机会, 想清楚在选");
-            }
-        } while (cmpp.getProtocol() == null);
 
-        do {
-            System.out.print("输入连接地址：");
-            String ip = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(ip)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(ip)) {
-                return false;
-            }
-            cmpp.setChannelHost(ip);
-        } while (cmpp.getChannelHost() == null);
+        String protocol = KeyboardCommandUtil.getKeyboardCommand("选择账号协议[1、CMPP20  2、CMPP30]:", scanner, List.of("1", "2"), "再给你一次机会！！");
+        if (protocol == null) return;
 
-        do {
-            System.out.print("输入账号端口：");
-            String port = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(port)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(port)) {
-                return false;
-            }
-            try {
-                cmpp.setChannelPort(Integer.valueOf(port));
-            } catch (NumberFormatException e) {
-                System.out.println("输入有问题！！！！！！！");
-            }
-        } while (cmpp.getChannelPort() == null);
+        switch (protocol) {
+            case "1" -> cmpp.setProtocol(CmppType.CMPP20);
+            case "2" -> cmpp.setProtocol(CmppType.CMPP30);
+        }
 
-        do {
-            System.out.print("输入登录账号：");
-            String account = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(account)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(account)) {
-                return false;
-            }
-            cmpp.setLoginName(account);
-        } while (cmpp.getLoginName() == null);
+        cmpp.setChannelHost(KeyboardCommandUtil.getKeyboardCommand("输入连接地址:", scanner, null, null));
+        if (cmpp.getChannelHost() == null) return;
 
-        do {
-            System.out.print("输入登录密码：");
-            String password = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(password)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(password)) {
-                return false;
-            }
-            cmpp.setPassword(password);
-        } while (cmpp.getPassword() == null);
+        cmpp.setChannelPort(KeyboardCommandUtil.getKeyDefaultValueNumber("输入账号端口:", scanner, 7890));
+        if (cmpp.getChannelPort() == null) return;
 
-        do {
-            System.out.print("输入通道号码：");
-            String srcId = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(srcId)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(srcId)) {
-                return false;
-            }
-            cmpp.setSrcId(srcId);
-        } while (cmpp.getSrcId() == null);
+        cmpp.setLoginName(KeyboardCommandUtil.getKeyboardCommand("输入登录账号:", scanner, null, null));
+        if (cmpp.getLoginName() == null) return;
 
-        do {
-            System.out.print("输入最大连接：");
-            String maxConnection = scanner.nextLine();
-            if ("reset".equalsIgnoreCase(maxConnection)) {
-                continue;
-            }
-            if ("exit".equalsIgnoreCase(maxConnection)) {
-                return false;
-            }
-            try {
-                cmpp.setMaxConnect(Integer.valueOf(maxConnection));
-            } catch (NumberFormatException e) {
-                System.out.println("输入有问题！！！！！！！");
-            }
-        } while (cmpp.getMaxConnect() == null);
+        cmpp.setPassword(KeyboardCommandUtil.getKeyboardCommand("输入登录密码:", scanner, null, null));
+        if (cmpp.getPassword() == null) return;
 
-        System.out.print("看清楚，确认好。没问题就输入 (ok): ");
-        String verify = scanner.nextLine();
-        if (!"ok".equalsIgnoreCase(verify)) {
-            return false;
+        cmpp.setSrcId(KeyboardCommandUtil.getKeyboardCommand("输入通道号码:", scanner, null, null));
+        if (cmpp.getSrcId() == null) return;
+
+        cmpp.setMaxConnect(KeyboardCommandUtil.getKeyDefaultValueNumber("输入最大连接:", scanner, 2));
+        if (cmpp.getMaxConnect() == null) return;
+
+        String command = KeyboardCommandUtil.getKeyboardCommand("看清楚，确认好。没问题就输入 (ok):", scanner, List.of("ok", "no"), "再给你一次机会！！");
+        if (!"ok".equalsIgnoreCase(command)) {
+            return;
         }
         cmppAccountManage.addAccount(cmpp);
         startCmppEndpointConnection.openEndpoint(cmpp);
-        return true;
     }
 
 

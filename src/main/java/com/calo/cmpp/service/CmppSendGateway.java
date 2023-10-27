@@ -52,7 +52,6 @@ public class CmppSendGateway {
             cmppSubmitRequestMessages.forEach(row -> monitorSendManage.addSequence(row.getSequenceNo(), sendMessageSubmit.getLocalMessageId()));
             managerEndpointConnector.synwriteUncheck(cmppSubmitRequestMessages);
             monitorSendManage.addMessage(sendMessageSubmit);
-            System.out.println(sendMessageSubmit);
         } catch (Exception e) {
             System.out.println("短信提交失败:" + submitMessage);
         }
