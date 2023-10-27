@@ -32,22 +32,20 @@ public class CommandController {
 
     private static volatile boolean isOut = false;
 
-    public void bootMenuFunction(String... args) {
+    public void bootMenuFunction() {
         Scanner scanner = new Scanner(System.in);
         do {
             MySystemFunction.clean();
-            this.queAccount();
             this.showMenu();
             System.out.print("* 选择功能：");
-            String menuIndex = scanner.nextLine();
 
-            switch (menuIndex) {
+            switch (scanner.nextLine()) {
                 case "1" -> this.addAccountCmpp(scanner);
                 case "2" -> this.delAccount(scanner);
                 case "3" -> this.queSendTask(scanner);
                 case "4" -> this.executeTask(scanner, false);
                 case "5" -> this.executeTask(scanner, true);
-                case "6" -> this.rveSendTask(scanner);
+                case "6" -> this.rveSendTask();
                 case "7" -> this.queryMsgId(scanner);
                 case "8" -> this.clearCacheData(scanner);
                 case "0" -> this.quit(scanner);
@@ -80,6 +78,7 @@ public class CommandController {
         System.out.println("\033[1;94m[4] 执行——批次任务发送              [5] 执行——持续任务发送               [6] 停止——全部发送执行\033[m");
         System.out.println("\033[1;94m[7] 查询——数据详细信息              [8] 清理——清除缓存数据\033[m");
         System.out.println("\033[1;94m---------------------------------------\033[m\033[31m 退出程序输入：0 \033[m\033[1;94m-----------------------------------------\033[m");
+        this.queAccount();
     }
 
     private void quit(Scanner scanner) {
@@ -90,7 +89,7 @@ public class CommandController {
         }
     }
 
-    private void rveSendTask(Scanner scanner) {
+    private void rveSendTask() {
         generateInfoService.stopSend();
     }
 
@@ -102,11 +101,9 @@ public class CommandController {
         }
     }
 
-
     private synchronized void queSendTask(Scanner scanner) {
         isOut = true;
-        while (!scanner.nextLine().equalsIgnoreCase("")) {
-        }
+        for (; ; ) if (scanner.nextLine().equalsIgnoreCase("")) break;
         isOut = false;
     }
 
