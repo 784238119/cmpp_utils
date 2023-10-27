@@ -1,3 +1,1 @@
 Cmpp Pressure Measurement tTool：V3.1.1  Writer：Calo
-
-jpackage --type exe --name CmppUtil --input target --main-jar CmppUtil.jar --win-console --dest dist
