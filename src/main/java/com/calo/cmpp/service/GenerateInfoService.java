@@ -41,16 +41,14 @@ public class GenerateInfoService {
 
     private synchronized void generateABatchOfMobilePhoneNumberData(CmppSendAccountChannel sendAccountChannel, PressureTestRequest request) {
         int sendSize = request.getSendSize();
-        boolean isLongSms = true;
         while (sendSize > 0) try {
-            SendMessageSubmit sendMessageSubmit = monitorSendManage.produceSendMessageSubmit(sendAccountChannel.getChannelId(), isLongSms, request);
-            if (sendSize % sendMessageSubmit.getCount() == 0) {
-                monitorSendManage.addMessageCount(sendMessageSubmit.getCount());
-                queue.put(sendMessageSubmit);
-                sendSize = sendSize - sendMessageSubmit.getCount();
-            } else {
-                isLongSms = false;
+            SendMessageSubmit sendMessageSubmit = monitorSendManage.produceSendMessageSubmit(sendAccountChannel.getChannelId(), request);
+            if (sendSize - sendMessageSubmit.getCount() < 0) {
+                continue;
             }
+            queue.put(sendMessageSubmit);
+            monitorSendManage.addMessageCount(sendMessageSubmit.getCount());
+            sendSize = sendSize - sendMessageSubmit.getCount();
         } catch (InterruptedException e) {
             System.out.println("加入元素异常");
         }

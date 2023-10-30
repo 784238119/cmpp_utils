@@ -76,12 +76,12 @@ public class MonitorSendManage {
         reportOffset = reportNewOffset;
     }
 
-    public SendMessageSubmit produceSendMessageSubmit(String channelId, boolean isLongSms, PressureTestRequest request) {
+    public SendMessageSubmit produceSendMessageSubmit(String channelId, PressureTestRequest request) {
         String content;
         if ("1".equals(request.getTemplateCode())) {
             content = request.getTemplateBody();
         } else {
-            content = RandomMessageContent.getContentRandom(isLongSms);
+            content = RandomMessageContent.getContentRandom();
         }
         int count = RandomMessageContent.count(content);
         return SendMessageSubmit
