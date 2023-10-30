@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class CmppPressureTestApplication {
+public class CmppUtilApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CmppPressureTestApplication.class, args);
+        SpringApplication.run(CmppUtilApplication.class, args);
     }
 
 }

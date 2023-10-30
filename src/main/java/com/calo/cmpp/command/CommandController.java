@@ -73,12 +73,12 @@ public class CommandController {
     }
 
     private void showMenu() {
-        System.out.println("\033[1;94m--------------------------------------- 功能菜单列表命令 ---------------------------------------\033[m");
-        System.out.println("\033[1;94m[1] 添加——发送账号配置              [2] 删除——发送账号配置               [3] 查询——发送任务参数\033[m");
-        System.out.println("\033[1;94m[4] 执行——批次任务发送              [5] 执行——持续任务发送               [6] 停止——全部发送执行\033[m");
-        System.out.println("\033[1;94m[7] 查询——数据详细信息              [8] 清理——清除缓存数据\033[m");
-        System.out.println("\033[1;94m---------------------------------------\033[m\033[31m 退出程序输入：0 \033[m\033[1;94m-----------------------------------------\033[m");
         this.queAccount();
+        System.out.println("\033[1;94m----------------------------------------- 功能菜单列表命令 ---------------------------------------\033[m");
+        System.out.println("\033[33m[1] \033[1;94m添加——发送账号配置\033[m                  \033[33m[2]\033[m \033[1;94m删除——发送账号配置\033[m                \033[33m[3]\033[m \033[1;94m查询——发送任务参数\033[m");
+        System.out.println("\033[33m[4] \033[1;94m执行——批次任务发送\033[m                  \033[33m[5]\033[m \033[1;94m执行——持续任务发送\033[m                \033[33m[6]\033[m \033[1;94m停止——全部发送执行\033[m");
+        System.out.println("\033[33m[7] \033[1;94m查询——数据详细信息\033[m                  \033[33m[8]\033[m \033[1;94m清理——清除缓存数据\033[m");
+        System.out.println("\033[1;94m-----------------------------------------\033[m\033[31m 退出程序输入：0 \033[m\033[1;94m---------------------------------------\033[m");
     }
 
     private void quit(Scanner scanner) {
@@ -167,7 +167,7 @@ public class CommandController {
         String accountNumber = scanner.nextLine();
         if (cmppAccountManage.removeAccount(accountNumber)) {
             manager.remove(accountNumber);
-            System.out.println("删除成功，恭喜恭喜！！\n3");
+            System.out.println("删除成功，恭喜恭喜恭喜。\n");
         } else {
             System.out.println("删除失败，没有这个账号。\n");
         }
@@ -176,10 +176,10 @@ public class CommandController {
 
     private void addAccountCmpp(Scanner scanner) {
         CmppSendAccountChannel cmpp = new CmppSendAccountChannel();
-        System.out.println("输入CMPP账号对应的参数：");
         System.out.println("\033[1;94m----------------------------------------- 添加账号列表 -----------------------------------------\033[m");
+        System.out.println("* 输入CMPP账号对应的参数：");
 
-        String protocol = KeyboardCommandUtil.getKeyboardCommand("选择账号协议[1、CMPP20  2、CMPP30]:", scanner, List.of("1", "2"), "再给你一次机会！！");
+        String protocol = KeyboardCommandUtil.getKeyboardCommand("1、选择账号协议[1、CMPP20  2、CMPP30]:", scanner, List.of("1", "2"), "再给你一次机会！！");
         if (protocol == null) return;
 
         switch (protocol) {
@@ -187,25 +187,25 @@ public class CommandController {
             case "2" -> cmpp.setProtocol(CmppType.CMPP30);
         }
 
-        cmpp.setChannelHost(KeyboardCommandUtil.getKeyboardCommand("输入连接地址:", scanner, null, null));
+        cmpp.setChannelHost(KeyboardCommandUtil.getKeyboardCommand("2、输入连接地址:", scanner, null, null));
         if (cmpp.getChannelHost() == null) return;
 
-        cmpp.setChannelPort(KeyboardCommandUtil.getKeyDefaultValueNumber("输入账号端口:", scanner, 7890));
+        cmpp.setChannelPort(KeyboardCommandUtil.getKeyDefaultValueNumber("3、输入账号端口:", scanner, 7890));
         if (cmpp.getChannelPort() == null) return;
 
-        cmpp.setLoginName(KeyboardCommandUtil.getKeyboardCommand("输入登录账号:", scanner, null, null));
+        cmpp.setLoginName(KeyboardCommandUtil.getKeyboardCommand("4、输入登录账号:", scanner, null, null));
         if (cmpp.getLoginName() == null) return;
 
-        cmpp.setPassword(KeyboardCommandUtil.getKeyboardCommand("输入登录密码:", scanner, null, null));
+        cmpp.setPassword(KeyboardCommandUtil.getKeyboardCommand("5、输入登录密码:", scanner, null, null));
         if (cmpp.getPassword() == null) return;
 
-        cmpp.setSrcId(KeyboardCommandUtil.getKeyboardCommand("输入通道号码:", scanner, null, null));
+        cmpp.setSrcId(KeyboardCommandUtil.getKeyboardCommand("6、输入通道号码:", scanner, null, null));
         if (cmpp.getSrcId() == null) return;
 
-        cmpp.setMaxConnect(KeyboardCommandUtil.getKeyDefaultValueNumber("输入最大连接:", scanner, 2));
+        cmpp.setMaxConnect(KeyboardCommandUtil.getKeyDefaultValueNumber("7、输入最大连接:", scanner, 2));
         if (cmpp.getMaxConnect() == null) return;
 
-        String command = KeyboardCommandUtil.getKeyboardCommand("看清楚，确认好。没问题就输入 (ok):", scanner, List.of("ok", "no"), "再给你一次机会！！");
+        String command = KeyboardCommandUtil.getKeyboardCommand("8、看清楚，确认好。没问题就输入 (ok):", scanner, List.of("ok", "no"), "再给你一次机会！！");
         if (!"ok".equalsIgnoreCase(command)) {
             return;
         }

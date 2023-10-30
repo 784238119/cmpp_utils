@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.calo.cmpp</groupId>
-    <artifactId>cmpp_pressure_test</artifactId>
+    <artifactId>CmppUtil</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Cmpp_Pressure_Test</name>
     <description>Cmpp_Pressure_Test</description>
