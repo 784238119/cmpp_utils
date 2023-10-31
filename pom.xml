@@ -54,26 +54,7 @@
             <artifactId>mapdb</artifactId>
             <version>3.0.9</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.core-lib</groupId>
-            <artifactId>xjar</artifactId>
-            <version>4.0.2</version>
-        </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <plugins>
@@ -98,17 +79,25 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.github.core-lib</groupId>
-                <artifactId>xjar-maven-plugin</artifactId>
-                <version>4.0.2</version>
+                <groupId>net.roseboy</groupId>
+                <artifactId>classfinal-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <!-- 加密打包之后pom.xml会被删除，不用担心在jar包里找到此密码，当为#时不加密 -->
+                    <password>123456</password>
+                    <!-- 加密的包名(可为空,多个用","分割) -->
+                    <packages>com.calo.cmpp</packages>
+                    <!-- 配置说明文件，如果没有特殊的打包要求可以注销cfgfiles标签 -->
+                    <cfgfiles>application.yaml</cfgfiles>
+                    <!-- 排除的类名(可为空,多个用","分割) -->
+                    <excludes>org.spring</excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <configuration>
-                            <injar>${project.build.finalName}.jar</injar>
-                            <outjar>${project.build.finalName}-security.jar</outjar>
-                            <obfuscate>true</obfuscate>
-                        </configuration>
+                        <goals>
+                            <goal>classFinal</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
