@@ -4,7 +4,6 @@ package com.calo.cmpp.service;
 import cn.hutool.json.JSONUtil;
 import com.calo.cmpp.domain.CmppSendAccountChannel;
 import jakarta.annotation.PreDestroy;
-import lombok.extern.log4j.Log4j2;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Log4j2
 @Service
 public class CmppAccountManage {
 

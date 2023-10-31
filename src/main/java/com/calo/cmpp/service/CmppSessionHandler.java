@@ -6,12 +6,10 @@ import com.zx.sms.codec.cmpp.msg.CmppSubmitResponseMessage;
 import com.zx.sms.handler.api.AbstractBusinessHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Log4j2
 @ChannelHandler.Sharable
 public class CmppSessionHandler extends AbstractBusinessHandler {
 

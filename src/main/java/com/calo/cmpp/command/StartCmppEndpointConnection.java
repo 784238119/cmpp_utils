@@ -8,7 +8,6 @@ import com.zx.sms.connect.manager.EndpointEntity;
 import com.zx.sms.connect.manager.EndpointManager;
 import com.zx.sms.connect.manager.cmpp.CMPPClientEndpointEntity;
 import com.zx.sms.handler.api.BusinessHandlerInterface;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Lazy;
@@ -22,7 +21,6 @@ import java.util.List;
  * 程序启动的时候，加载通道信息
  */
 
-@Slf4j
 @Component
 public class StartCmppEndpointConnection implements CommandLineRunner {
 

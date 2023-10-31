@@ -10,7 +10,6 @@ import com.calo.cmpp.util.KeyboardCommandUtil;
 import com.calo.cmpp.util.MySystemFunction;
 import com.zx.sms.connect.manager.EndpointConnector;
 import com.zx.sms.connect.manager.EndpointManager;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@Log4j2
 public class CommandController {
 
     private StartCmppEndpointConnection startCmppEndpointConnection;

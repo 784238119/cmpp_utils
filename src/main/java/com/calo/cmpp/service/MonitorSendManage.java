@@ -11,7 +11,6 @@ import com.calo.cmpp.util.MySystemFunction;
 import com.calo.cmpp.util.RandomMessageContent;
 import com.calo.cmpp.util.RandomPhoneNumber;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Log4j2
 @Component
 public class MonitorSendManage {
 
@@ -202,6 +200,8 @@ public class MonitorSendManage {
         failureCount.set(0);
         successCount.set(0);
         answersCount.set(0);
+        sendsOKCount.set(0);
+        mistakeCount.set(0);
         submitSpeed = 0;
         submitOffset = 0;
         responseSpeed = 0;

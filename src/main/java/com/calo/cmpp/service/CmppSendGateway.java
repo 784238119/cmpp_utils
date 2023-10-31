@@ -7,7 +7,6 @@ import com.zx.sms.common.util.ChannelUtil;
 import com.zx.sms.connect.manager.EndpointConnector;
 import com.zx.sms.connect.manager.EndpointManager;
 import jakarta.annotation.PostConstruct;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Log4j2
 @Service
 public class CmppSendGateway {
 
@@ -42,7 +40,7 @@ public class CmppSendGateway {
             CmppSendAccountChannel account = cmppAccountManage.getAccount(messageSubmit.getChannelId());
             this.submitMessageSend(account, messageSubmit);
         } catch (Exception e) {
-            log.error("取出数据异常：" + e.getMessage());
+            System.out.println("取出数据异常：" + e.getMessage());
         }
     }
 
