@@ -36,6 +36,6 @@ public class CmppSendAccountChannel implements Serializable {
     private Integer connectCount;
 
     public void printf() {
-        System.out.printf("\033[32m" + "%-6s%-12s%-23s%-11s%-11s%-12s%-12s%-10s\n", getChannelId(), connectCount, channelHost + ":" + channelPort, protocol, loginName, password, srcId, maxConnect);
+        System.out.printf("\033[32m" + "%-8s%-10s%-25s%-11s%-11s%-12s%-14s%-10s\n", getChannelId(), connectCount, channelHost + ":" + channelPort, protocol, loginName, password, srcId, maxConnect);
     }
 }

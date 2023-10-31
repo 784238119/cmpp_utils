@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.calo.cmpp</groupId>
     <artifactId>CmppUtil</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Cmpp_Pressure_Test</name>
-    <description>Cmpp_Pressure_Test</description>
+    <version>3.1.9</version>
+    <name>CmppUtil</name>
+    <description>CmppUtil</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -54,19 +54,22 @@
             <artifactId>mapdb</artifactId>
             <version>3.0.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.core-lib</groupId>
+            <artifactId>xjar</artifactId>
+            <version>4.0.2</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

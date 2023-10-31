@@ -40,14 +40,16 @@ public class CommandController {
             System.out.print("* 选择功能：");
 
             switch (scanner.nextLine()) {
+                case "" -> {}
                 case "1" -> this.addAccountCmpp(scanner);
                 case "2" -> this.delAccount(scanner);
                 case "3" -> this.queSendTask(scanner);
-                case "4" -> this.executeTask(scanner, false);
-                case "5" -> this.executeTask(scanner, true);
-                case "6" -> this.rveSendTask();
+                case "4" -> this.executeTask(scanner, false, false);
+                case "5" -> this.executeTask(scanner, true, false);
+                case "6" -> this.executeTask(scanner, false, true);
                 case "7" -> this.queryMsgId(scanner);
                 case "8" -> this.clearCacheData(scanner);
+                case "9" -> this.rveSendTask();
                 case "0" -> this.quit(scanner);
                 default -> {
                     System.out.println("\033[1;93m程序没有该功能，你是不是找茬, 给你一次机会，回车！！！！！！！！！\033[m");
@@ -76,8 +78,8 @@ public class CommandController {
         this.queAccount();
         System.out.println("\033[1;94m----------------------------------------- 功能菜单列表命令 ---------------------------------------\033[m");
         System.out.println("\033[33m[1] \033[1;94m添加——发送账号配置\033[m                  \033[33m[2]\033[m \033[1;94m删除——发送账号配置\033[m                \033[33m[3]\033[m \033[1;94m查询——发送任务参数\033[m");
-        System.out.println("\033[33m[4] \033[1;94m执行——批次任务发送\033[m                  \033[33m[5]\033[m \033[1;94m执行——持续任务发送\033[m                \033[33m[6]\033[m \033[1;94m停止——全部发送执行\033[m");
-        System.out.println("\033[33m[7] \033[1;94m查询——数据详细信息\033[m                  \033[33m[8]\033[m \033[1;94m清理——清除缓存数据\033[m");
+        System.out.println("\033[33m[4] \033[1;94m执行——批次任务发送\033[m                  \033[33m[5]\033[m \033[1;94m执行——持续任务发送\033[m                \033[33m[6]\033[m \033[1;94m发送——发送批验证码\033[m");
+        System.out.println("\033[33m[7] \033[1;94m查询——数据详细信息\033[m                  \033[33m[8]\033[m \033[1;94m清理——清除缓存数据\033[m                \033[33m[9]\033[m \033[1;94m停止——全部发送执行\033[m");
         System.out.println("\033[1;94m-----------------------------------------\033[m\033[31m 退出程序输入：0 \033[m\033[1;94m---------------------------------------\033[m");
     }
 
@@ -107,39 +109,42 @@ public class CommandController {
         isOut = false;
     }
 
-    private void executeTask(Scanner scanner, boolean sendWay) {
+    private void executeTask(Scanner scanner, boolean sendWay, boolean verificationCode) {
         PressureTestRequest pressureTestRequest = new PressureTestRequest();
 
         List<String> channelIds = cmppAccountManage.getAccountAllId();
-        String channelId = KeyboardCommandUtil.getKeyboardCommand("\n选择你要使用的账号输入：", scanner, channelIds, "再给你一次机会！");
+        String channelId = KeyboardCommandUtil.getKeyboardCommand("\n1、选择你要使用的账号输入：", scanner, channelIds, "再给你一次机会！");
         if (channelId == null) return;
         pressureTestRequest.setAccountId(channelId);
 
         if (sendWay) {
-            Integer time = KeyboardCommandUtil.getKeyDefaultValueNumber("发送间隔时间(毫秒)输入：", scanner, 1000);
+            Integer time = KeyboardCommandUtil.getKeyDefaultValueNumber("2、发送间隔时间(毫秒)输入：", scanner, 1000);
             if (time == null) return;
             pressureTestRequest.setPeriodTime(time);
         }
 
-        Integer size = KeyboardCommandUtil.getKeyDefaultValueNumber("输入你发送批次大小输入：", scanner, 1000);
+        Integer size = KeyboardCommandUtil.getKeyDefaultValueNumber("3、输入你发送批次大小输入：", scanner, 1000);
         if (size == null) return;
         pressureTestRequest.setSendSize(size);
 
-        System.out.println("(0全部，1移动，2联通，3电信)");
-        String operator = KeyboardCommandUtil.getKeyboardCommand("是否指定运营商号码输入：", scanner, List.of("0", "1", "2", "3"), "再给你一次机会！");
+        System.out.println("\033[1;93m*** (0全部，1移动，2联通，3电信) ***\033[m");
+        String operator = KeyboardCommandUtil.getKeyboardCommand("4、是否指定运营商号码输入：", scanner, List.of("0", "1", "2", "3"), "再给你一次机会！");
         if (operator == null) return;
         pressureTestRequest.setOperator(operator);
 
-        System.out.println("(1自定义内容，2默认生成内容)");
-        String templateCode = KeyboardCommandUtil.getKeyboardCommand("是否指定自定义内容输入：", scanner, List.of("1", "2"), "再给你一次机会！");
+        System.out.println("\033[1;93m*** (1自定义内容，2默认生成内容) ***\033[m");
+        String templateCode = KeyboardCommandUtil.getKeyboardCommand("5、是否指定自定义内容输入：", scanner, List.of("1", "2"), "再给你一次机会！");
         if (templateCode == null) return;
         pressureTestRequest.setTemplateCode(templateCode);
 
         if (!"2".equals(templateCode)) {
-            String templateBody = KeyboardCommandUtil.getKeyboardCommand("自定义内容输入：", scanner, null, "再给你一次机会！");
+            if (verificationCode)
+                System.out.println("\033[1;93m*** 自定义内容中的验证码使用\033[m \033[31m{}\033[m \033[1;93m代替 ***\033[m ");
+            String templateBody = KeyboardCommandUtil.getKeyboardCommand("6、自定义内容短信文案输入：", scanner, null, "再给你一次机会！");
             if (templateBody == null) return;
             pressureTestRequest.setTemplateBody(templateBody);
         }
+        pressureTestRequest.setVerificationCode(verificationCode);
         generateInfoService.generateSendSubmitMessage(pressureTestRequest);
     }
 
@@ -150,7 +155,7 @@ public class CommandController {
             System.out.println("没有账号，添加一个呗");
             return;
         }
-        System.out.printf("%-4s%-10s%-20s%-10s%-10s%-10s%-10s%-10s\n", "编号", "已连接数", "地址端口", "协议", "账号", "密码", "接入号", "连接数");
+        System.out.printf("%-4s %-7s %-20s %-8s %-8s %-9s %-9s %-2s\n", "编号", "已连接", "地址端口", "协议", "账号", "密码", "接入号", "连接数");
         for (CmppSendAccountChannel sendAccountChannel : accountAll) {
             EndpointConnector<?> endpointConnector = manager.getEndpointConnector(sendAccountChannel.getChannelId());
             if (endpointConnector != null) {

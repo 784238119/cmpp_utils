@@ -34,7 +34,14 @@ public class StartCmppEndpointConnection implements CommandLineRunner {
     //加载cmpp初始化
     @Override
     public void run(String... args) {
-        new Thread(() -> commandController.bootMenuFunction()).start();
+        Thread thread = null;
+        try {
+            thread = new Thread(() -> commandController.bootMenuFunction());
+            thread.setDaemon(true);
+            thread.start();
+        } catch (Exception e) {
+            System.out.println("启动菜单异常：" + e.getMessage());
+        }
         List<CmppSendAccountChannel> cmppAccounts = cmppAccountManage.getAccountAll();
         if (cmppAccounts == null || cmppAccounts.isEmpty()) return;
         for (CmppSendAccountChannel cmppAccount : cmppAccounts) {

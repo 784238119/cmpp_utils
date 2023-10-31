@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,7 +46,7 @@ public class CmppSendGateway {
         }
     }
 
-    private void submitMessageSend(CmppSendAccountChannel sendAccountChannel, SendMessageSubmit sendMessageSubmit) {
+    private void submitMessageSend(CmppSendAccountChannel sendAccountChannel, SendMessageSubmit sendMessageSubmit) throws UnsupportedEncodingException {
         CmppSubmitRequestMessage submitMessage = this.getCmppSubmitRequestMessage(sendAccountChannel, sendMessageSubmit);
         EndpointConnector<?> managerEndpointConnector = manager.getEndpointConnector(sendAccountChannel.getChannelId());
         try {
@@ -57,11 +59,11 @@ public class CmppSendGateway {
         }
     }
 
-    private CmppSubmitRequestMessage getCmppSubmitRequestMessage(CmppSendAccountChannel sendAccountChannel, SendMessageSubmit sendMessageSubmit) {
+    private CmppSubmitRequestMessage getCmppSubmitRequestMessage(CmppSendAccountChannel sendAccountChannel, SendMessageSubmit sendMessageSubmit) throws UnsupportedEncodingException {
         String accessCode = sendAccountChannel.getSrcId() == null ? "" : sendAccountChannel.getSrcId();
         String extend = sendMessageSubmit.getExtend() == null ? "" : sendMessageSubmit.getExtend();
         String srcId = StringUtils.substring(accessCode + extend, 0, 20);
-        CmppSubmitRequestMessage message = CmppSubmitRequestMessage.create(sendMessageSubmit.getMobile(), srcId, sendMessageSubmit.getContent());
+        CmppSubmitRequestMessage message = CmppSubmitRequestMessage.create(sendMessageSubmit.getMobile(), srcId,  new String(sendMessageSubmit.getContent().getBytes(), StandardCharsets.UTF_8));
         message.setRegisteredDelivery((short) 1);
         message.setMsgsrc(sendAccountChannel.getLoginName());
         return message;

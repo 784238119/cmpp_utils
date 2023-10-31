@@ -10,6 +10,8 @@ public class RandomMessageContent {
 
     private final static List<String> CONTENT_LIST = new ArrayList<>();
 
+    private final static String verificationCode = "【验证码】您的验证码是：{}。请不要把验证码泄露给其他人。如非本人操作，可不用理会！";
+
     static {
         CONTENT_LIST.add("【你说啥】对方隔了一条江给你打电话说手机快没电了，江不宽，你仔细听我说，但是你还是听不太清。");
         CONTENT_LIST.add("【听不见】我接到你的电话，你说手机快没电了，你要隔江对话，可是我听不清。");
@@ -36,7 +38,10 @@ public class RandomMessageContent {
     }
 
 
-    public static String getContentRandom() {
+    public static String getContentRandom(boolean verificationCode) {
+        if (verificationCode) {
+            return RandomMessageContent.verificationCode;
+        }
         int boundedRandomValue = ThreadLocalRandom.current().nextInt(0, CONTENT_LIST.size());
         return CONTENT_LIST.get(boundedRandomValue);
     }

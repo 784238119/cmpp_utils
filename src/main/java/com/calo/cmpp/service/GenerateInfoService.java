@@ -1,6 +1,7 @@
 package com.calo.cmpp.service;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.calo.cmpp.domain.CmppSendAccountChannel;
 import com.calo.cmpp.domain.PressureTestRequest;
 import com.calo.cmpp.domain.SendMessageSubmit;
@@ -45,6 +46,9 @@ public class GenerateInfoService {
             SendMessageSubmit sendMessageSubmit = monitorSendManage.produceSendMessageSubmit(sendAccountChannel.getChannelId(), request);
             if (sendSize - sendMessageSubmit.getCount() < 0) {
                 continue;
+            }
+            if (request.getVerificationCode()) {
+                sendMessageSubmit.setContent(StrUtil.format(sendMessageSubmit.getContent(), sendSize));
             }
             queue.put(sendMessageSubmit);
             monitorSendManage.addMessageCount(sendMessageSubmit.getCount());

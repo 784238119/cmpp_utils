@@ -1,7 +1,6 @@
 package com.calo.cmpp.service;
 
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.calo.cmpp.domain.CmppSendAccountChannel;
 import jakarta.annotation.PreDestroy;
@@ -20,17 +19,11 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 public class CmppAccountManage {
 
-    public static File fileDD = new File("account.db");
+    public static  File fileDD = new File("account.db");
 
-    private final DB fileDb = DBMaker.fileDB(fileDD).fileMmapEnable().make();
-    private final ConcurrentMap<String, String> accountDbMap = fileDb.hashMap("account", Serializer.STRING, Serializer.STRING).createOrOpen();
-    private final ConcurrentMap<String, CmppSendAccountChannel> accountCache = new ConcurrentHashMap<>();
-
-    static {
-        if (!fileDD.exists()) {
-            fileDD = FileUtil.newFile("account.db");
-        }
-    }
+    private static final DB fileDb = DBMaker.fileDB(fileDD).fileMmapEnable().make();
+    private static final ConcurrentMap<String, String> accountDbMap = fileDb.hashMap("account", Serializer.STRING, Serializer.STRING).createOrOpen();
+    private static final ConcurrentMap<String, CmppSendAccountChannel> accountCache = new ConcurrentHashMap<>();
 
     public void addAccount(CmppSendAccountChannel accountChannel) {
         accountChannel.setChannelId(String.valueOf(accountDbMap.size()));

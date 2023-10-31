@@ -81,7 +81,7 @@ public class MonitorSendManage {
         if ("1".equals(request.getTemplateCode())) {
             content = request.getTemplateBody();
         } else {
-            content = RandomMessageContent.getContentRandom();
+            content = RandomMessageContent.getContentRandom(request.getVerificationCode());
         }
         int count = RandomMessageContent.count(content);
         return SendMessageSubmit

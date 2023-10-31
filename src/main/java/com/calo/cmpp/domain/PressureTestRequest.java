@@ -26,4 +26,6 @@ public class PressureTestRequest {
     private String templateCode;
 
     private String templateBody;
+
+    private Boolean verificationCode;
 }
