@@ -33,7 +33,7 @@ public class GenerateInfoService {
 
         if (sendAccountChannel == null) {
             System.out.println("没有这个账号！！！！！");
-        } else if (request.getSendWay()) {
+        } else if (request.getIsLongTime()) {
             this.generateMobilePhoneNumberDataRegularly(sendAccountChannel, request);
         } else {
             this.generateABatchOfMobilePhoneNumberData(sendAccountChannel, request);

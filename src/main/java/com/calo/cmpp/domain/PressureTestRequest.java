@@ -19,7 +19,7 @@ public class PressureTestRequest {
     /**
      * 持续发送、随机间断发送
      */
-    private Boolean sendWay = false;
+    private Boolean isLongTime = false;
 
     private String operator;
 

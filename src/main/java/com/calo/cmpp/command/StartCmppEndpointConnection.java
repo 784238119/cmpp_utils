@@ -34,7 +34,7 @@ public class StartCmppEndpointConnection implements CommandLineRunner {
     //加载cmpp初始化
     @Override
     public void run(String... args) {
-        Thread thread = null;
+        Thread thread;
         try {
             thread = new Thread(() -> commandController.bootMenuFunction());
             thread.setDaemon(true);

@@ -26,7 +26,11 @@ public class CmppSessionHandler extends AbstractBusinessHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
         if (msg instanceof CmppSubmitResponseMessage message) {
-            monitorSendManage.addMsgId(message.getSequenceNo(), message.getMsgId().toString());
+            if (message.getResult() == 0) {
+                monitorSendManage.addMsgId(message.getSequenceNo(), message.getMsgId().toString());
+            }else {
+                monitorSendManage.delMsgId(message.getSequenceNo(), message.getMsgId().toString());
+            }
             return;
         }
 

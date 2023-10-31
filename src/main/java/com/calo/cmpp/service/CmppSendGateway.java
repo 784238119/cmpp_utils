@@ -51,9 +51,15 @@ public class CmppSendGateway {
         EndpointConnector<?> managerEndpointConnector = manager.getEndpointConnector(sendAccountChannel.getChannelId());
         try {
             List<CmppSubmitRequestMessage> cmppSubmitRequestMessages = ChannelUtil.splitLongSmsMessage(managerEndpointConnector.getEndpointEntity(), submitMessage);
-            cmppSubmitRequestMessages.forEach(row -> monitorSendManage.addSequence(row.getSequenceNo(), sendMessageSubmit.getLocalMessageId()));
-            managerEndpointConnector.synwriteUncheck(cmppSubmitRequestMessages);
             monitorSendManage.addMessage(sendMessageSubmit);
+            cmppSubmitRequestMessages.forEach(row -> {
+                monitorSendManage.addSequence(row.getSequenceNo(), sendMessageSubmit.getLocalMessageId());
+                if (managerEndpointConnector.getConnectionNum() == 0) {
+                    monitorSendManage.delMsgId(row.getSequenceNo());
+                } else {
+                    managerEndpointConnector.synwriteUncheck(row);
+                }
+            });
         } catch (Exception e) {
             System.out.println("短信提交失败:" + submitMessage);
         }
@@ -63,7 +69,7 @@ public class CmppSendGateway {
         String accessCode = sendAccountChannel.getSrcId() == null ? "" : sendAccountChannel.getSrcId();
         String extend = sendMessageSubmit.getExtend() == null ? "" : sendMessageSubmit.getExtend();
         String srcId = StringUtils.substring(accessCode + extend, 0, 20);
-        CmppSubmitRequestMessage message = CmppSubmitRequestMessage.create(sendMessageSubmit.getMobile(), srcId,  new String(sendMessageSubmit.getContent().getBytes(), StandardCharsets.UTF_8));
+        CmppSubmitRequestMessage message = CmppSubmitRequestMessage.create(sendMessageSubmit.getMobile(), srcId, new String(sendMessageSubmit.getContent().getBytes(), StandardCharsets.UTF_8));
         message.setRegisteredDelivery((short) 1);
         message.setMsgsrc(sendAccountChannel.getLoginName());
         return message;

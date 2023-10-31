@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.calo.cmpp</groupId>
     <artifactId>CmppUtil</artifactId>
-    <version>3.1.9</version>
+    <version>3.2.0</version>
     <name>CmppUtil</name>
     <description>CmppUtil</description>
     <properties>
@@ -68,6 +68,13 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -89,6 +96,21 @@
                     <source>19</source>
                     <target>19</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.core-lib</groupId>
+                <artifactId>xjar-maven-plugin</artifactId>
+                <version>4.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <injar>${project.build.finalName}.jar</injar>
+                            <outjar>${project.build.finalName}-security.jar</outjar>
+                            <obfuscate>true</obfuscate>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

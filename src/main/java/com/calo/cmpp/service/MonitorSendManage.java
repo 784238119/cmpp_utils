@@ -59,6 +59,8 @@ public class MonitorSendManage {
     public static final AtomicInteger failureCount = new AtomicInteger(0);
     public static final AtomicInteger successCount = new AtomicInteger(0);
     public static final AtomicInteger answersCount = new AtomicInteger(0);
+    public static final AtomicInteger mistakeCount = new AtomicInteger(0);
+    public static final AtomicInteger sendsOKCount = new AtomicInteger(0);
 
 
     @Scheduled(fixedDelay = 1L, timeUnit = TimeUnit.SECONDS)
@@ -117,7 +119,31 @@ public class MonitorSendManage {
             sendMessageSubmit.getMsgId().add(msgId);
         }
         answersCount.incrementAndGet();
+        sendsOKCount.incrementAndGet();
         msgIdCache.put(msgId, localMessageId);
+    }
+
+    public void delMsgId(int sequence) {
+        String localMessageId = suiteCache.get(sequence);
+        if (localMessageId == null) {
+            return;
+        }
+        suiteCache.remove(sequence);
+        mistakeCount.incrementAndGet();
+    }
+
+    public void delMsgId(int sequence, String msgId) {
+        String localMessageId = suiteCache.get(sequence);
+        if (localMessageId == null) {
+            return;
+        }
+        suiteCache.remove(sequence);
+        SendMessageSubmit sendMessageSubmit = messageCache.get(localMessageId);
+        if (sendMessageSubmit != null) {
+            sendMessageSubmit.getMsgId().add(msgId);
+        }
+        answersCount.incrementAndGet();
+        mistakeCount.incrementAndGet();
     }
 
     public void addReport(String msgId, String statusCode) {
@@ -143,15 +169,18 @@ public class MonitorSendManage {
         int answersNum = answersCount.get();
         int successNum = successCount.get();
         int failureNum = failureCount.get();
+        int mistakeNum = mistakeCount.get();
+        int sendsOKNum = sendsOKCount.get();
         String responseRate = "\033[1;95m" + (answersNum == 0 ? "00.00" : numberFormat.format((double) answersNum / (double) submitsNum * 100.00)) + "%\033[m";
         String reportingRate = "\033[1;95m" + (failureNum + successNum == 0 ? "00.00" : numberFormat.format((double) (successNum + failureNum) / (double) submitsNum * 100.00)) + "%\033[m";
         String successRate = "\033[1;95m" + (successNum == 0 ? "00.00" : numberFormat.format((double) successNum / (double) answersNum * 100.00)) + "%\033[m";
         String failureRate = "\033[1;95m" + (failureNum == 0 ? "00.00" : numberFormat.format((double) failureNum / (double) answersNum * 100.00)) + "%\033[m";
         String unknownRate = "\033[1;95m" + (answersNum - successNum - failureNum == 0 ? "00.00" : numberFormat.format((double) (answersNum - failureNum - successNum) / (double) answersNum * 100.00)) + "%\033[m";
         System.out.println("\033[1;94m----------------------------------------- 监控发送 ---------------------------------------------\033[m");
-        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "生成消息数: \033[1;95m", messageNum, "\033[m提交消息数: \033[1;95m", submitsNum, "\033[m提交速度: \033[1;95m", submitSpeed + "/s\033[m");
-        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "响应消息数: \033[1;95m", answersNum, "\033[m报告消息数: \033[1;95m", successNum + failureNum, "\033[m响应速度: \033[1;95m", responseSpeed + "/s\033[m");
-        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "成功消息数: \033[1;95m", successNum, "\033[m失败消息数: \033[1;95m", failureNum, "\033[m报告速度: \033[1;95m", reportSpeed + "/s\033[m");
+        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "生成消息数: \033[1;95m", messageNum, "\033[m提交消息数: \033[1;95m", submitsNum, "\033[m提交失败数: \033[1;95m", mistakeNum + "\033[m");
+        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "响应消息数: \033[1;95m", answersNum, "\033[m报告消息数: \033[1;95m", successNum + failureNum, "\033[m提交成功数: \033[1;95m", sendsOKNum + "\033[m");
+        System.out.printf("%-5s%-26s%-5s%-25s%-5s%-5s\n", "成功消息数: \033[1;95m", successNum, "\033[m失败消息数: \033[1;95m", failureNum, "\033[m未知消息数: \033[1;95m", (answersNum - failureNum - successNum) + "\033[m");
+        System.out.printf("%-6s%-31s%-6s%-30s%-5s%-6s\n", "\033[m提交速度: \033[1;95m", submitSpeed + "/s\033[m", "\033[m响应速度: \033[1;95m", responseSpeed + "/s\033[m", "\033[m报告速度: \033[1;95m", reportSpeed + "/s\033[m");
         System.out.printf("%-6s%-20s%-6s%-20s%-6s%-20s%-6s%-20s%-6s%-5s\n", "响应率: ", responseRate, "报告率: ", reportingRate, "成功率: ", successRate, "失败率: ", failureRate, "未知率: ", unknownRate);
         System.out.println("\033[1;94m------------------------------------------------------------------------------------------------\033[m");
     }
@@ -187,4 +216,6 @@ public class MonitorSendManage {
     public void addMessageCount(int count) {
         messageCount.addAndGet(count);
     }
+
+
 }
